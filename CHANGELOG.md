@@ -11,6 +11,7 @@
 * The `artifact-version` list is now sorted.
 * Add `namespace-aliases` which provides a mapping of the namespace aliases that are in use in the project.
 * Make `find-symbol` able to handle macros.
+* Add `find-used-publics` which list occurrences of symbols defined in namespace A in namespace B.
 
 ### Bugs fixed
 

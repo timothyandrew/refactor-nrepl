@@ -6,7 +6,7 @@
             [clojure.tools.reader.reader-types :as readers]
             [me.raynes.fs :as fs]
             [refactor-nrepl.util :refer [normalize-to-unix-path]])
-  (:import [java.io File FileReader PushbackReader StringReader]))
+  (:import [java.io FileReader PushbackReader StringReader]))
 
 (defn ns-from-string
   "Retrieve the symbol naming the ns from file-content."
@@ -273,3 +273,7 @@
               (str "Can't create a fully qualified symbol from: '" prefix
                    "' and  '" suffix "'"))))
     (str prefix "/" suffix)))
+
+(defn normalize-var-name
+  [sym-str]
+  (str/replace sym-str #"#'.*/" ""))
