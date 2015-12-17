@@ -41,3 +41,42 @@
     (if (seq xs)
       (apply conj coll xs)
       coll)))
+
+(defn aggregate [x y]
+  "If x and y are collections then return (concat x y).
+
+If x or y is a collection and the other is an atom then conj the value
+onto the collection.
+
+If both x and y are values then create a seq of x and y."
+  (cond
+    (and (coll? x) (coll? y)) (concat x y)
+    (coll? x) (conj x y)
+    (coll? y) (conj y x)
+    :else (list x y)))
+
+(defn- ensure-sequential [x]
+  (if (sequential? x) x [x]))
+
+(defn mapvals [f m]
+  "Apply f to each val in m"
+  (into (empty m)
+        (for [[k v] m]
+          [k (f v)])))
+
+(defn index-by [k maps]
+  "Create an index for the maps on the common key key."
+  (mapvals ensure-sequential
+           (reduce (fn [acc m]
+                     (merge-with aggregate acc
+                                 (when-let [v (get m k)]
+                                   {v m}))) {}
+                   maps)))
+
+(defn keep-keys
+  "Return a map containing only keys ks in m."
+  [m & ks]
+  (into (empty m)
+        (for [k ks
+              :when (not= ::not-found (get m k ::not-found))]
+          [k (get m k)])))
